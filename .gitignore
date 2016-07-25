@@ -1,0 +1,6 @@
+.project
+.idea/
+/vendor/*
+.bundle
+*.swp
+.DS_Store
