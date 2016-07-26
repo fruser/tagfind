@@ -1,2 +1,2 @@
-# tagfind
-Find specific tag within the repository
+# TagFind
+Find specific tag information within the repository
