@@ -28,11 +28,6 @@ def get_arguments():
                                 required = False,
                                 default='github.com')
 
-    required_named.add_argument('-t',
-                                '--tags',
-                                help='Enter Tags to look for',
-                                required=True)
-
     arguments = parser.parse_args()
 
     if not os.path.isdir(arguments.output):
