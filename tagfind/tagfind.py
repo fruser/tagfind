@@ -1,6 +1,26 @@
 from arguments import get_arguments
-from get_package import get_package
+import utils
 from datetime import datetime
+
+
+def tag_verify(tag_list):
+    filtered_list = []
+    seen = set()
+
+    for tag in tag_list:
+        if tag in seen:
+            print('Skipping {0} tag due to duplicate record...'.format(tag))
+        elif not tag.startswith('@'):
+            print('Skipping {0} tag due to incorrect format...'.format(tag))
+        else:
+            filtered_list.append(tag)
+            seen.add(tag)
+
+    return filtered_list
+
+
+def tag_list_verify():
+    pass
 
 
 def main():
@@ -10,8 +30,16 @@ def main():
     time_format = datetime.now().strftime('%Y-%m-%d_%H.%M.%S')
 
     output = output + '/' + repo.replace('/','_') + '-' + time_format
+    #utils.get_package(archive, output)
 
-    get_package(archive, output)
+    # for testing only. Remove Before committing
+    output = '/Users/tgladkikh/Projects/tagfind/test'
+
+    feature_files = utils.get_feature_files(output)
+
+    tag_ojb_list = utils.parse_files(feature_files)
+
+    print('End')
 
 
 if __name__ == '__main__':
