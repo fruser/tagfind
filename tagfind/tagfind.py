@@ -19,10 +19,6 @@ def tag_verify(tag_list):
     return filtered_list
 
 
-def tag_list_verify():
-    pass
-
-
 def main():
     output, repo, domain = get_arguments()
     archive = 'https://{0}/{1}/archive/master.zip'.format(domain, repo)
@@ -30,7 +26,7 @@ def main():
     time_format = datetime.now().strftime('%Y-%m-%d_%H.%M.%S')
 
     output = output + '/' + repo.replace('/','_') + '-' + time_format
-    #utils.get_package(archive, output)
+    utils.get_package(archive, output)
 
     # for testing only. Remove Before committing
     output = '/Users/tgladkikh/Projects/tagfind/test'

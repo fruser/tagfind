@@ -27,8 +27,9 @@ def get_feature_files(directory):
 
     for subdir, dirs, files in os.walk(rootdir):
         for file in fnmatch.filter(files, '*.feature'):
-            print(os.path.join(subdir, file))
-            feature_files.append({'file_name': file,
+            # print(os.path.join(subdir, file))
+            # TODO: log this information
+            feature_files.append({'file_name': os.path.splitext(file)[0],
                                   'location': os.path.join(subdir, file)})
 
     return feature_files
