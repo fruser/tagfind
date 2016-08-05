@@ -5,6 +5,9 @@ import fnmatch
 import glob
 import re
 import tags as tg
+from log_info import logger
+
+LOG = logger()
 
 
 def get_package(archive, output):
@@ -13,10 +16,12 @@ def get_package(archive, output):
 
 
 def get_zip(archive, output):
+    LOG.info('Downloading Master zip file from {0}'.format(archive))
     request.urlretrieve(archive, output)
 
 
 def extract_zip(archive, output):
+    LOG.info('Extracting Master zip file into {0}'.format(output))
     with ZipFile(archive, 'r') as z:
         z.extractall(output)
 
@@ -27,8 +32,8 @@ def get_feature_files(directory):
 
     for subdir, dirs, files in os.walk(rootdir):
         for file in fnmatch.filter(files, '*.feature'):
-            print(os.path.join(subdir, file))
-            feature_files.append({'file_name': file,
+            LOG.info('Adding {0} to the list of feature files'.format(file))
+            feature_files.append({'file_name': os.path.splitext(file)[0],
                                   'location': os.path.join(subdir, file)})
 
     return feature_files
@@ -40,11 +45,13 @@ def find_tag_obj(tag_list, tag_name):
 
 
 def parse_files(files):
+    LOG.info('Started parsing process...')
     tag_list = []
 
     for file in files:
         with open(file['location'], 'r') as FileObj:
             feature = file['file_name']
+            LOG.info('Working on {0} feature file'.format(feature))
 
             feature_tags = []
             current_tags = []
