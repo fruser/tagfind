@@ -46,9 +46,11 @@ def find_tag_obj(tag_list, tag_name):
 
 def parse_files(files):
     LOG.info('Started parsing process...')
-    tag_list = []
+    tags_list = []
 
     for file in files:
+        feature_global_count = 0
+
         with open(file['location'], 'r') as FileObj:
             feature = file['file_name']
             LOG.info('Working on {0} feature file'.format(feature))
@@ -59,7 +61,8 @@ def parse_files(files):
             scenario_outline_header_flag = False
 
             for line in FileObj:
-                if re.match(r'\s', line) or re.match(r'#', line):
+                line = line.strip()
+                if re.match(r'#', line):
                     continue
 
                 elif re.match(r'@', line):
@@ -116,13 +119,13 @@ def parse_files(files):
                         scenario_outline_header_flag = False
                         continue
                     else:
-                        tg.Tags.global_count += 1
+                        feature_global_count += 1
                         for tag in feature_tags:
                             if tag.feature_global or tag.scenario_outline_global or tag.scenario_outline_local:
                                 tag.test_count += 1
 
                 elif line.startswith('Scenario:'):
-                    tg.Tags.global_count += 1
+                    feature_global_count += 1
 
                     for tag in feature_tags:
                         if tag.feature_global:
@@ -140,12 +143,40 @@ def parse_files(files):
                     else:
                         continue
 
-        tag_list.append({'feature': feature,
+        tags_list.append({'feature': feature,
                          'tags': feature_tags,
-                         'test_count': tg.Tags.global_count})
+                         'tests_count': feature_global_count})
 
-    return tag_list
+    return tags_list
 
+
+def stats_output(tags_list):
+    global_test_count = 0
+    tag_stats = {}
+
+    for tags in tags_list:
+        global_test_count += tags['tests_count']
+
+        print('~~~~~~~~~ "{0}" tag stats information: ~~~~~~~~~'.format(tags['feature']))
+        print('tag_name | test_stats')
+        for tag in tags['tags']:
+            print(tag.tag_name, '|', str(tag.test_count))
+
+            if tag.tag_name in tag_stats:
+                tag_stats[tag.tag_name] += tag.test_count
+            else:
+                tag_stats[tag.tag_name] = tag.test_count
+
+        print('>>>>>>>>> Total test count for the "{0}" feature is {1} <<<<<<<<<'.format(tags['feature'], tags['tests_count']))
+
+    print('---------------------')
+    print('--------- Global test count is {0} ---------'.format(global_test_count))
+    print('---------------------')
+
+    print('Tag based statistics (tag_name|value):')
+    print('---------------------')
+    for key, value in tag_stats.items():
+        print(key, '|', value)
 
 
 def main():
