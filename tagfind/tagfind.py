@@ -38,6 +38,8 @@ def main():
 
     tag_ojb_list = utils.parse_files(feature_files)
 
+    utils.stats_output(tag_ojb_list)
+
     utils.LOG.info('Finished...')
 
 
