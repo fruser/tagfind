@@ -15,18 +15,18 @@ def get_arguments():
                         required=False,
                         default=tempfile.gettempdir())
 
+    parser.add_argument('-d',
+                                '--domain',
+                                help = 'Enter GitHub custom domain',
+                                required = False,
+                                default = 'github.com')
+
     required_named = parser.add_argument_group('required arguments')
 
     required_named.add_argument('-r',
                         '--repo',
                         help = 'Enter GitHub repository URL',
                         required = True)
-
-    required_named.add_argument('-d',
-                                '--domain',
-                                help = 'Enter GitHub custom domain',
-                                required = False,
-                                default='github.com')
 
     arguments = parser.parse_args()
 
