@@ -31,9 +31,6 @@ def main():
     output = output + '/' + repo.replace('/','_') + '-' + time_format
     utils.get_package(archive, output)
 
-    # for testing only. Remove Before committing
-    output = '/Users/tgladkikh/Projects/tagfind/test'
-
     feature_files = utils.get_feature_files(output)
 
     tag_ojb_list = utils.parse_files(feature_files)

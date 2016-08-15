@@ -156,27 +156,27 @@ def stats_output(tags_list):
 
     for tags in tags_list:
         global_test_count += tags['tests_count']
-
-        print('~~~~~~~~~ "{0}" tag stats information: ~~~~~~~~~'.format(tags['feature']))
-        print('tag_name | test_stats')
+        print('')
+        print('### "{0}" tag stats information: ###'.format(tags['feature']))
         for tag in tags['tags']:
-            print(tag.tag_name, '|', str(tag.test_count))
+            print('-', tag.tag_name + ':', str(tag.test_count))
 
             if tag.tag_name in tag_stats:
                 tag_stats[tag.tag_name] += tag.test_count
             else:
                 tag_stats[tag.tag_name] = tag.test_count
 
-        print('>>>>>>>>> Total test count for the "{0}" feature is {1} <<<<<<<<<'.format(tags['feature'], tags['tests_count']))
+        print('Total number of tests: {0}'.format(tags['tests_count']))
 
-    print('---------------------')
-    print('--------- Global test count is {0} ---------'.format(global_test_count))
-    print('---------------------')
-
-    print('Tag based statistics (tag_name|value):')
-    print('---------------------')
+    print('')
+    print('--------------------------------------------------------------------------------')
+    print('### Tag based statistics ###')
     for key, value in tag_stats.items():
-        print(key, '|', value)
+        print(key + ':', value)
+
+    print('')
+    print('--------------------------------------------------------------------------------')
+    print('Global test count is {0}'.format(global_test_count))
 
 
 def main():
