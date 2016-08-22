@@ -6,6 +6,7 @@ import glob
 import re
 import tags as tg
 from log_info import logger
+from operator import itemgetter
 
 LOG = logger()
 
@@ -32,9 +33,11 @@ def get_feature_files(directory):
 
     for subdir, dirs, files in os.walk(rootdir):
         for file in fnmatch.filter(files, '*.feature'):
+            location = os.path.join(subdir, file)
+            filename = os.path.split(os.path.dirname(location))[1] + '/' + os.path.splitext(file)[0]
             LOG.info('Adding {0} to the list of feature files'.format(file))
-            feature_files.append({'file_name': os.path.splitext(file)[0],
-                                  'location': os.path.join(subdir, file)})
+            feature_files.append({'file_name': filename,
+                                  'location': location})
 
     return feature_files
 
@@ -68,6 +71,7 @@ def parse_files(files):
                 elif re.match(r'@', line):
                     rgx = re.compile('(@[\w]+)')
                     line_tags = rgx.findall(line)
+                    line_tags = [x.lower() for x in line_tags if not re.search('[0-9]', x)]
 
                     for line_tag in line_tags:
                         tag_obj = find_tag_obj(feature_tags, line_tag)
@@ -151,13 +155,14 @@ def parse_files(files):
 
 
 def stats_output(tags_list):
+    tags_list = sorted(tags_list, key = itemgetter('feature'))
     global_test_count = 0
     tag_stats = {}
 
     for tags in tags_list:
         global_test_count += tags['tests_count']
         print('')
-        print('### "{0}" tag stats information: ###'.format(tags['feature']))
+        print('### "{0}" feature stats information: ###'.format(tags['feature']))
         for tag in tags['tags']:
             print('-', tag.tag_name + ':', str(tag.test_count))
 
@@ -171,7 +176,7 @@ def stats_output(tags_list):
     print('')
     print('--------------------------------------------------------------------------------')
     print('### Tag based statistics ###')
-    for key, value in tag_stats.items():
+    for key, value in sorted(tag_stats.items(), key=lambda x:x[0]):
         print(key + ':', value)
 
     print('')
